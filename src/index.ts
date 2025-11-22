@@ -1,15 +1,20 @@
 import App from "./app";
-import { ServerBootstrap } from './bootstrap/server.bootstrap';
+import { ServerBootstrap } from './infrastructure/bootstrap/server.bootstrap';
+import { connectDB } from "./infrastructure/config/data-base";
 
 const serverBootstrap = new ServerBootstrap(App);
 
 (
   async() => {
     try {
-      const instances = [serverBootstrap.initialize()];
+      const instances = [
+        connectDB(),
+        serverBootstrap.initialize()
+      ];
       await Promise.all(instances);
     } catch (error) {
       console.log({error});
+      process.exit(1);
     }
   }
 )();
