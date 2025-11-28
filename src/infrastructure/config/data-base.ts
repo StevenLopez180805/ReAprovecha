@@ -5,11 +5,12 @@ import envs from "./environment-vars";
 
 dotenv.config();
 export const AppDataSource = new DataSource({
-  type: "mysql",
+  type: "postgres",
   port: Number(envs.DB_PORT),
   username: envs.DB_USER,
   password: envs.DB_PASSWORD,
   database: envs.DB_NAME,
+  schema: "users",
   synchronize: false,
   logging: true,
   entities: [User]

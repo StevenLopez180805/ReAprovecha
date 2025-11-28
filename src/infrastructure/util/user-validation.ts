@@ -1,4 +1,4 @@
-import * as joi from 'joi';
+import joi from 'joi';
 
 export type ReturnUserData = {
   first_name: string,
@@ -39,6 +39,10 @@ const validateUserData = (data:any): ValidationUserData => {
     email: joi.string().email({tlds: {allow: false}}).required().messages({
       'string.empty': 'El correo electrónico es requerido',
       'string.email': 'Correo electrónico no válido'
+    }),
+    password: joi.string().min(10).required().messages({
+      'string.empty': 'La contraseña es requerida',
+      'string.min': 'La contraseña debe tener al menos 10 caracteres'
     })
   }).unknown(false);
 

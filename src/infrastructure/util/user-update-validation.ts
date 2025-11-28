@@ -1,4 +1,4 @@
-import * as joi from 'joi';
+import joi from 'joi';
 
 export type ReturnUpdateUserData = {
   first_name: string,
@@ -30,6 +30,9 @@ const validateUpdateUserData = (data:any): ValidationUpdateUserData => {
     }),
     email: joi.string().email({tlds: {allow: false}}).messages({
       'string.email': 'Correo electrónico no válido'
+    }),
+    password: joi.string().min(10).messages({
+      'string.min': 'La contraseña debe tener al menos 10 caracteres'
     })
   }).unknown(false).or("first_name", "second_name", "last_name", "second_last_name", "email");
 

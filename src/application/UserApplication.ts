@@ -26,8 +26,8 @@ export class UserApplication{
 
   async updateUser(id:number, user:Partial<User>):Promise<boolean>{
     const existingUser = await this.port.getUserById(id);
-    if (existingUser) {
-      throw new Error("Usuario no encontradoo");
+    if (!existingUser) {
+      throw new Error("Usuario no encontrado");
     }
     if (user.email) {
       const emailTaken = await this.port.getUserByEmail(user.email);

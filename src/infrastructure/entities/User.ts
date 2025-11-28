@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity('users')
 export class User{
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id!: number;
 
   @Column({type: "varchar", length: 50})
@@ -20,15 +20,15 @@ export class User{
   @Column({type: "varchar", length: 254})
   email!:string;
 
-  @Column({type: "varchar", length: 128})
+  @Column({type: "varchar", length: 255})
   password!:string;
 
-  @Column({type: "varchar"})
-  created_at!:string;
+  @CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+  created_at!: Date;
 
-  @Column({type: "varchar"})
-  updated_at!:string;
+  @UpdateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
+  updated_at!: Date;
 
-  @Column({type: "varchar"})
-  deleted_at!:string;
+  @Column({type: "timestamp", nullable: true})
+  deleted_at!: Date | null;
 }
