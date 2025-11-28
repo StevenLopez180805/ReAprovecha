@@ -1,11 +1,16 @@
-import { Repository, PrimaryGeneratedColumn } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { User as UserDomain} from "../../domain/User";
 import { UserPort } from "../../domain/UserPort";
 import { User as UserEntity } from "../entities/User";
+import { AppDataSource } from '../config/data-base';
 
 export class UserAdapter implements UserPort{
 
-  constructor(private userRepository: Repository<UserEntity>){}
+  private userRepository: Repository<UserEntity>;
+
+  constructor(){
+    this.userRepository = AppDataSource.getRepository(UserEntity);
+  }
 
   private toDomain(user: UserEntity): UserDomain {
     return {
@@ -60,17 +65,44 @@ export class UserAdapter implements UserPort{
       throw new Error("Error al actualizar el usuario");
     }
   }
-  deleteUser(id: number): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async deleteUser(id: number): Promise<boolean> {
+    try {
+      const existingUser = await this.userRepository.findOne({where: {id: id}});
+      if (!existingUser) return false;
+
+      Object.assign(existingUser, {
+        deleted_at: new Date(),
+      });
+
+      await this.userRepository.save(existingUser);
+      return true;
+    } catch (error) {
+      throw new Error("Error al eliminar el usuario");
+    }
   }
-  getUserById(id: number): Promise<UserDomain | null> {
-    throw new Error("Method not implemented.");
+  async getUserById(id: number): Promise<UserDomain | null> {
+    try {
+      const user = await this.userRepository.findOne({where: {id: id}})
+      return user? this.toDomain(user) : null;
+    } catch (error) {
+      throw new Error("Ocurrió un error al obtener el usuario");
+    }
   }
-  getUserByEmail(email: string): Promise<UserDomain | null> {
-    throw new Error("Method not implemented.");
+  async getUserByEmail(email: string): Promise<UserDomain | null> {
+    try {
+      const user = await this.userRepository.findOne({where: {email: email}})
+      return user? this.toDomain(user) : null;
+    } catch (error) {
+      throw new Error("Ocurrió un error al obtener el usuario");
+    }
   }
-  getAllUsers(): Promise<UserDomain[]> {
-    throw new Error("Method not implemented.");
+  async getAllUsers(): Promise<UserDomain[]> {
+    try {
+      const users = await this.userRepository.find({where: {deleted_at: IsNull()}});
+      return users.map(this.toDomain);
+    } catch (error) {
+      throw new Error("Ocurrió un error al obtener los usuarios");
+    }
   }
 
 }
