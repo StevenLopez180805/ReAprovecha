@@ -18,6 +18,7 @@ export class UserAdapter implements UserPort{
       first_name: user.first_name,
       second_name: user.second_name,
       last_name: user.last_name,
+      rol: user.rol,
       second_last_name: user.second_last_name,
       email: user.email,
       password: user.password
@@ -30,6 +31,7 @@ export class UserAdapter implements UserPort{
     userEntity.second_name = user.second_name;
     userEntity.last_name = user.last_name;
     userEntity.second_last_name = user.second_last_name;
+    userEntity.rol = user.rol;
     userEntity.email = user.email;
     userEntity.password = user.password;
     return userEntity;

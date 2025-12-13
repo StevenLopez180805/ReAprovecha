@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { User } from "../entities/User";
+import { Publication } from "../entities/Publication";
 import { DataSource } from "typeorm";
 import envs from "./environment-vars";
 
@@ -10,10 +11,10 @@ export const AppDataSource = new DataSource({
   username: envs.DB_USER,
   password: envs.DB_PASSWORD,
   database: envs.DB_NAME,
-  schema: "users",
+  schema: "public",
   synchronize: false,
   logging: true,
-  entities: [User]
+  entities: [User, Publication]
 });
 
 export const connectDB = async() => {

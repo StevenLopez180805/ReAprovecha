@@ -1,10 +1,12 @@
 import joi from 'joi';
+import { UserRoles } from '../../domain/UserRoles';
 
 export type ReturnUserData = {
   first_name: string,
   second_name: string,
   last_name: string,
   second_last_name: string,
+  rol: UserRoles
   email: string,
   password: string
 };
@@ -35,6 +37,13 @@ const validateUserData = (data:any): ValidationUserData => {
       'string.base': 'El second last name debe ser un texto',
       'string.empty': 'El second last name es requerido',
       'string.min': 'El second last name debe tener al menos 3 caracteres'
+    }),
+    rol: joi.string()
+    .valid(...Object.values(UserRoles))
+    .required()
+    .messages({
+      'any.only': 'El rol debe ser uno de los valores permitidos',
+      'any.required': 'El rol es obligatorio'
     }),
     email: joi.string().email({tlds: {allow: false}}).required().messages({
       'string.empty': 'El correo electrónico es requerido',

@@ -20,8 +20,8 @@ export class UserController{
 
   async createUser(req: Request, res:Response):Promise<Response>{
     try {
-      const {first_name, second_name, last_name, second_last_name, email, password} = loadUserData(req.body)
-      const user: Omit<User, "id"> = {first_name, second_name, last_name, second_last_name, email, password};
+      const {first_name, second_name, last_name, second_last_name, rol, email, password} = loadUserData(req.body)
+      const user: Omit<User, "id"> = {first_name, second_name, last_name, second_last_name, rol, email, password};
       const userId = await this.app.createUser(user);
       return res.status(201).json({msg: "Usuario creado con éxito", userId});
     } catch (error) {

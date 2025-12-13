@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthApplication } from "../../application/AuthApplication";
+import { UserRoles } from "../../domain/UserRoles";
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction):void{
   const authHeader = req.headers['authorization'];
@@ -10,8 +11,8 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const payload = AuthApplication.verifyToken(token);
-    (req as any).user = payload;
+    const payload = AuthApplication.verifyToken(token) as { id: number, rol: UserRoles };
+    req.user = { id: payload.id, rol: payload.rol };
     next();
   } catch (error) {
     res.status(403).json({error: "Token inválido o expirado"});

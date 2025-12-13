@@ -19,7 +19,7 @@ export class UserApplication{
 
     const token = AuthApplication.generateToken({
       id: existingUser.id,
-      email: existingUser.email
+      rol: existingUser.rol
     });
     return token;
   }

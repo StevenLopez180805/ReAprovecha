@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Publication } from "./Publication";
+import { UserRoles } from "../../domain/UserRoles";
 
 @Entity('users')
 export class User{
@@ -17,11 +19,23 @@ export class User{
   @Column({type: "varchar", length: 50})
   second_last_name!:string;
 
+  @Column({
+    type: "enum",
+    enum: UserRoles
+  })
+  rol!: UserRoles;
+  
   @Column({type: "varchar", length: 254})
   email!:string;
 
   @Column({type: "varchar", length: 255})
   password!:string;
+
+  @OneToMany(() => Publication, (publication) => publication.user)
+  publications!: Publication[];
+
+  @OneToMany(() => Publication, (publication) => publication.userReserve)
+  reservedPublications!: Publication[];
 
   @CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
   created_at!: Date;
